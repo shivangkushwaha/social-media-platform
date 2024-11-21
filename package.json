@@ -1,0 +1,36 @@
+{
+  "name": "backend-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=local nodemon index.js",
+    "start-dev": "cross-env NODE_ENV=development nodemon index.js",
+    "start-prod": "cross-env NODE_ENV=production nodemon index.js",
+    "pretest": "cross-env NODE_ENV=test npx sequelize-cli db:seed:all",
+    "test": "npx cypress open",
+    "start-server-test": "NODE_ENV=`test` start-server-and-test http://localhost:8081",
+    "seeder": "npx sequelize-cli db:seed:all",
+    "swagger": "node ./swagger.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^2.3.0",
+    "sequelize": "^6.6.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "author": "",
+  "license": "ISC"
+}
