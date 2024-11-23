@@ -5,7 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const {validator} = require("../middleware/validator.middlewares")
 const schema = require('../schema/account.schema')
 const upload = require('../services/upload.service');
-const { uploadFile } = require('../controllers/attachment.controller');
+const { uploadFile, serveFile } = require('../controllers/attachment.controller');
 
 
 /**
@@ -13,7 +13,7 @@ const { uploadFile } = require('../controllers/attachment.controller');
  * /upload:
  *   post:
  *     summary: Upload an image or video.
- *     tags: [File Upload]
+ *     tags: [Attachment]
  *     requestBody:
  *       required: true
  *       content:
@@ -42,6 +42,38 @@ const { uploadFile } = require('../controllers/attachment.controller');
  *         description: No file uploaded or invalid file type.
  */
 router.post('/upload', upload.single('file'), uploadFile);
+
+
+
+
+
+/**
+ * @swagger
+ * /{id}:
+ *   get:
+ *     summary: View an image by name
+ *     description: Fetch an image stored in the local directory.
+ *     tags: [Attachment]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Name of the image file to fetch.
+ *         schema:
+ *           type: string
+ *           example: sample.jpg
+ *     responses:
+ *       200:
+ *         description: Successfully fetched the image.
+ *         content:
+ *           image/jpeg:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: Image not found.
+ */
+router.get('/:id', serveFile);
 
 
 module.exports = router;
