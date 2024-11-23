@@ -1,9 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const accountController = require('../controllers/accountController');
-const authMiddleware = require('../middleware/authMiddleware');
-const {validator} = require("../middleware/validator.middlewares")
-const schema = require('../schema/account.schema')
 const upload = require('../services/upload.service');
 const { uploadFile, serveFile } = require('../controllers/attachment.controller');
 

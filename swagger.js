@@ -6,15 +6,29 @@ const swaggerOptions = {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'File Upload API',
+        title: 'Social Media API',
         version: '1.0.0',
-        description: 'API for uploading image and video files',
+        description: 'API for Social Media App',
       },
       servers: [
         {
-          url: 'http://localhost:3000/api',
+          url: `http://localhost:${process.env.NODE_PORT}/api`,
         },
       ],
+      components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT', // Optional, specifies the format of the token
+            },
+        },
+    },
+    security: [
+        // {
+        //     bearerAuth: [], // Apply the security scheme globally (optional)
+        // },
+    ],
     },
     apis: ['./app/routes/*'], // Path to the route file
 };

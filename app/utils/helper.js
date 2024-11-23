@@ -3,31 +3,18 @@ const Cryptr = require("cryptr");
 const Secret_Key = process.env.SECRET_KEY;
 const cryptr = new Cryptr(Secret_Key);
 const Jwt = require("jsonwebtoken");
-const privateKey = process.env.TOKEN_SECRET;
-const sgMail = require("@sendgrid/mail");
-const emailApiKey = process.env.EMAIL_ACCUNT_API_KEY
-const Models = require("./models");
+const privateKey = process.env.JWT_SECRET;
+
+const Models = require("../models");
 const appConstant = require("../appConstant.js");
 const axios = require("axios");
-const attachmentAttribute = require("./attributes/attachment.js").includeAttachmentAttributes;
+
 module.exports = {
   // Decrypt Data
   decryptData:async(text)=>{
     return cryptr.decrypt(text)
   },
 
-  sendEmail: async(email, subject, body )=>{
-    sgMail.setApiKey(emailApiKey);
-    console.log("Sending Email ..............................")
-    const msg = {
-      to: email,
-      from: process.env.ADMIN_EMAIL, 
-      subject: subject,
-      html: body
-    };
-    let result=await sgMail.send(msg);
-    console.log("result",result)
-  },
   sendOTP: async(countryCode, phone, otp )=>{
     try{
       if(process.env.NODE_ENV ==='production') {
@@ -71,7 +58,7 @@ module.exports = {
           include: [
             {
               model: Models.Attachment,
-              attributes: attachmentAttribute
+              attributes: ['uuid','path']
             }
           ]
         },
