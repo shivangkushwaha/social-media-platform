@@ -42,7 +42,7 @@ module.exports = (sequelize, Sequelize) => {
         Comment.belongsTo(models.Post, {foreignKey: "postId"}),
         Comment.belongsTo(models.Comment, {foreignKey: "commentId"}),
         Comment.belongsTo(models.User, {foreignKey: "owner"})
-        Comment.hasMany(models.Comment, {foreignKey: "patentId"}),
+        Comment.hasMany(models.Comment, {foreignKey: "patentId", as : 'reply'}),
         Comment.belongsTo(models.Comment, {foreignKey: "patentId"}),
         Comment.hasMany(models.Action , {foreignKey: "commentId"})
     }

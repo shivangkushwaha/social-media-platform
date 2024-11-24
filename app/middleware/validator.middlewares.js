@@ -17,7 +17,9 @@ const validator = (schema, property) => {
 }
 const queryValidator= (schema, property) => {
   return (req, res, next) => {
+    req.query = {...req.query, ...req.params};
     const { error } = schema.validate({...req.query});
+    req.query = {...req.query, ...req.params};
     const valid = error == null;
     if (valid) {
       next();
