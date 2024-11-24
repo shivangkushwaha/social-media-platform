@@ -14,74 +14,87 @@ const {validator, queryValidator } = require("../middleware/validator.middleware
 
 /**
  * @swagger
- * components:
- *   schemas:
- *     Comment:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *           example: 1
- *         postId:
- *           type: integer
- *           example: 2
- *         content:
- *           type: string
- *           example: "This is a comment."
- *         patentId:
- *           type: integer
- *           example: 3
- *         owner:
- *           type: integer
- *           example: 1
- *         uuid:
- *           type: string
- *           format: uuid
- *           example: "550e8400-e29b-41d4-a716-446655440000"
- *         createdAt:
- *           type: string
- *           format: date-time
- *           example: "2024-11-24T15:45:00Z"
- *         updatedAt:
- *           type: string
- *           format: date-time
- *           example: "2024-11-24T15:45:00Z"
- *
  * /comment:
  *   post:
  *     summary: Create a new comment
+ *     description: Allows a user to create a new comment on a post. Optionally, a reply to a parent comment can be created by providing the `patentId`.
  *     tags: [Comment]
-  *     security:
+ *     security:
  *       - bearerAuth: []  # Optional
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Comment'
+ *             type: object
+ *             properties:
+ *               postId:
+ *                 type: integer
+ *                 description: ID of the post to comment on
+ *                 example: 5
+ *               content:
+ *                 type: string
+ *                 description: The content of the comment
+ *                 example: "This is a comment."
+ *               patentId:
+ *                 type: integer
+ *                 description: Optional parent comment ID if replying to a comment
+ *                 example: 3
  *     responses:
  *       201:
  *         description: Comment created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Comment'
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 postId:
+ *                   type: integer
+ *                   example: 5
+ *                 content:
+ *                   type: string
+ *                   example: "This is a comment."
+ *                 patentId:
+ *                   type: integer
+ *                   example: 3
+ *                 owner:
+ *                   type: integer
+ *                   example: 1
+ *                 uuid:
+ *                   type: string
+ *                   example: "550e8400-e29b-41d4-a716-446655440000"
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-11-24T15:45:00Z"
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-11-24T15:45:00Z"
  *       400:
- *         description: Invalid request or comment already exists
+ *         description: Invalid request or content is missing
  *       500:
  *         description: Server error
  * 
- * /comment/{postId}:
+ */
+
+
+/**
+ * @swagger
+ * /comment:
  *   get:
- *     summary: Get comments for a specific post (including replies)
+ *     summary: Get all comments or filter by query parameters
  *     tags: [Comment]
  *     security:
  *       - bearerAuth: []  # Optional
  *     parameters:
  *       - name: postId
- *         in: path
- *         required: true
+ *         in: query
  *         description: ID of the post to fetch comments for
+ *         required: false
  *         schema:
  *           type: integer
  *           example: 5
@@ -124,7 +137,7 @@ const {validator, queryValidator } = require("../middleware/validator.middleware
  *         required: false
  *         schema:
  *           type: string
- *           example: "javascript"
+ *           example: "comment text"
  *     responses:
  *       200:
  *         description: List of comments
@@ -134,34 +147,8 @@ const {validator, queryValidator } = require("../middleware/validator.middleware
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Comment'
- *       404:
- *         description: Post not found
- *       500:
- *         description: Server error
- * 
- * /comment/{id}:
- *   get:
- *     summary: Get a specific comment by ID (with replies)
- *     tags: [Comment]
- *     security:
- *       - bearerAuth: []  # Optional
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: ID of the comment
- *         schema:
- *           type: integer
- *           example: 1
- *     responses:
- *       200:
- *         description: Comment details with replies
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Comment'
- *       404:
- *         description: Comment not found
+ *       400:
+ *         description: Invalid query parameters
  *       500:
  *         description: Server error
  *   put:
@@ -169,25 +156,26 @@ const {validator, queryValidator } = require("../middleware/validator.middleware
  *     tags: [Comment]
  *     security:
  *       - bearerAuth: []  # Optional
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         description: ID of the comment to update
- *         schema:
- *           type: integer
- *           example: 1
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Comment'
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *               content:
+ *                 type: string
+ *                 example: "Updated comment content"
  *     responses:
  *       200:
  *         description: Comment updated successfully
  *       400:
  *         description: Invalid comment ID or content
+ *       404:
+ *         description: Comment not found
  *       500:
  *         description: Server error
  *   delete:
@@ -197,7 +185,7 @@ const {validator, queryValidator } = require("../middleware/validator.middleware
  *       - bearerAuth: []  # Optional
  *     parameters:
  *       - name: id
- *         in: path
+ *         in: query
  *         required: true
  *         description: ID of the comment to delete
  *         schema:
@@ -210,21 +198,13 @@ const {validator, queryValidator } = require("../middleware/validator.middleware
  *         description: Comment not found
  *       500:
  *         description: Server error
+ * 
  */
 
-// Create a new comment
+
 router.post('/comment', validator(createCommentSchema), authentication, createComment);
-
-// Get comments for a specific post (including replies)
-router.get('/comment/:postId', queryValidator(getCommentsByPostSchema), authentication, getCommentsByPost);
-
-// Get a specific comment by ID (with replies)
-router.get('/comment', queryValidator(getCommentsByPostSchema), authentication, getCommentById);
-
-// Update a comment
+router.get('/comment', queryValidator(getCommentsByPostSchema), authentication, getCommentsByPost);
 router.put('/comment', validator(updateCommentSchema), authentication, updateComment);
-
-// Delete a comment and its replies
-router.delete('/comment/:id', queryValidator(deleteCommentSchema), authentication, deleteComment);
+router.delete('/comment', queryValidator(deleteCommentSchema), authentication, deleteComment);
 
 module.exports = router;

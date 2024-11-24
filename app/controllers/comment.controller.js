@@ -129,7 +129,7 @@ const updateComment = async (req, res) => {
 // Delete a comment (and its replies)
 const deleteComment = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.query;
 
         const comment = await Comment.findByPk(id);
         if (!comment) {
@@ -149,7 +149,7 @@ const deleteComment = async (req, res) => {
 // Get a single comment (with replies)
 const getCommentById = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.query;
 
         const comment = await Comment.findByPk(id, {
             include: [
