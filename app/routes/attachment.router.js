@@ -45,7 +45,7 @@ router.post('/upload', upload.single('file'), uploadFile);
 
 /**
  * @swagger
- * /{id}:
+ * /attachment/{id}:
  *   get:
  *     summary: View an image by name
  *     description: Fetch an image stored in the local directory.
@@ -69,7 +69,7 @@ router.post('/upload', upload.single('file'), uploadFile);
  *       404:
  *         description: Image not found.
  */
-router.get('/:id', serveFile);
+router.get('/attachment/:id', serveFile);
 
 
 module.exports = router;

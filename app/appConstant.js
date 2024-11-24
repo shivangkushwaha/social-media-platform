@@ -35,5 +35,10 @@ module.exports = {
 
     },
     STORAGE_FOLDER_NAME : 'uploads',
+    POST_ACTIONS : {
+        'LIKE' : 1,
+        'HAPPY' : 2,
+        "SAD" : 3
+    }
 
 }
